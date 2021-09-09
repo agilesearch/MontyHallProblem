@@ -1,7 +1,5 @@
 package io.agile.search.domain
 
-
-import java.util.*
 import kotlin.random.Random
 
 const val MAX_DOORS = 3
@@ -12,11 +10,10 @@ private const val PRESENTER_NEEDS_TO_REMOVE_A_DOOR_FIRST = "Presenter needs to r
 
 class GameK() {
     private var doorUser: DoorK? = null
-    private val doors = HashSet<DoorK>()
     private val doorWinner = DoorK(Random.nextInt(MAX_DOORS), true)
+    private val doors = hashSetOf(doorWinner)
 
     init {
-        doors.add(doorWinner)
         var door: DoorK
         do {
             door = DoorK(Random.nextInt(MAX_DOORS), false)
@@ -39,20 +36,20 @@ class GameK() {
     fun swapDoor() {
         validateRemoveDoor()
         doorUser = doors.stream()
-            .filter{ it !== doorUser }
+            .filter { it !== doorUser }
             .findFirst().orElseThrow { NoSuchElementException(DOOR_NOT_EXIST) }
     }
 
     fun getWrongDoor(): DoorK {
-        if (Objects.isNull(doorUser)) {
+        if (doorUser == null) {
             throw IllegalStateException(USER_NEEDS_TO_CHOOSE_THE_PORT_FIRST)
         }
         if (doors.size < MAX_DOORS) {
             throw IllegalStateException(THE_DOOR_HAS_ALREADY_BEEN_SHOWN)
         }
         val wrongDoor: DoorK = doors.stream()
-            .filter{ !it.winner && it !== doorUser }
-            .findFirst().orElseThrow{ NoSuchElementException() }
+            .filter { !it.winner && it !== doorUser }
+            .findFirst().orElseThrow { NoSuchElementException() }
         doors.remove(wrongDoor)
         return wrongDoor
     }
