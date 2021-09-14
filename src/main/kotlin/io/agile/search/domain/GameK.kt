@@ -41,11 +41,9 @@ class GameK() {
     }
 
     fun getWrongDoor(): DoorK {
-        if (doorUser == null) {
-            throw IllegalStateException(USER_NEEDS_TO_CHOOSE_THE_PORT_FIRST)
-        }
-        if (doors.size < MAX_DOORS) {
-            throw IllegalStateException(THE_DOOR_HAS_ALREADY_BEEN_SHOWN)
+        when {
+            doorUser == null -> throw IllegalStateException(USER_NEEDS_TO_CHOOSE_THE_PORT_FIRST)
+            doors.size < MAX_DOORS -> throw IllegalStateException(THE_DOOR_HAS_ALREADY_BEEN_SHOWN)
         }
         val wrongDoor: DoorK = doors.stream()
             .filter { !it.winner && it !== doorUser }
