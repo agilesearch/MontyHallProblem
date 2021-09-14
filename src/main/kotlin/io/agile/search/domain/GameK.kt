@@ -28,16 +28,12 @@ class GameK() {
     }
 
     fun userChoice(doorNumber: Int) {
-        doorUser = doors.stream()
-            .filter { it.doorNumber == doorNumber }
-            .findFirst().orElseThrow { NoSuchElementException(DOOR_NOT_EXIST) }
+        doorUser = doors.firstOrNull { it.doorNumber == doorNumber } ?: throw NoSuchElementException(DOOR_NOT_EXIST)
     }
 
     fun swapDoor() {
         validateRemoveDoor()
-        doorUser = doors.stream()
-            .filter { it !== doorUser }
-            .findFirst().orElseThrow { NoSuchElementException(DOOR_NOT_EXIST) }
+        doorUser = doors.firstOrNull { it !== doorUser } ?: throw NoSuchElementException(DOOR_NOT_EXIST)
     }
 
     fun getWrongDoor(): DoorK {
@@ -45,9 +41,7 @@ class GameK() {
             doorUser == null -> throw IllegalStateException(USER_NEEDS_TO_CHOOSE_THE_PORT_FIRST)
             doors.size < MAX_DOORS -> throw IllegalStateException(THE_DOOR_HAS_ALREADY_BEEN_SHOWN)
         }
-        val wrongDoor: DoorK = doors.stream()
-            .filter { !it.winner && it !== doorUser }
-            .findFirst().orElseThrow { NoSuchElementException() }
+        val wrongDoor: DoorK = doors.firstOrNull { !it.winner && it !== doorUser } ?: throw NoSuchElementException()
         doors.remove(wrongDoor)
         return wrongDoor
     }
